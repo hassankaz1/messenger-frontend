@@ -11,7 +11,7 @@ const ChatHeader = () => {
     return (
         <Box p={2} sx={{
             width: "100%",
-            backgroundColor: theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.paper,
+            backgroundColor: theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.default,
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25) "
         }}>
             <Stack alignItems={"center"} direction="row" justifyContent={"space-between"}
