@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { dispatch } from "../store";
 // import axios from "../../utils/axios";
-
 
 
 const initialState = {
@@ -20,6 +20,7 @@ const slice = createSlice({
         },
         updateSideBarType(state, action) {
             state.sideBar.type = action.payload.type
+
         }
     },
 });
@@ -27,3 +28,18 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 
+export function ToggleSidebar() {
+    return async () => {
+        dispatch(slice.actions.toggleSideBar())
+
+    }
+
+}
+
+export function UpdateSidebarType(type) {
+    return async () => {
+        dispatch(slice.actions.updateSideBarType({ type }))
+
+    }
+
+}
