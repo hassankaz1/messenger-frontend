@@ -9,13 +9,15 @@ import { Stack, Alert, IconButton, InputAdornment, Button } from "@mui/material"
 // components
 import FormProvider, { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { RegisterUser } from "../../redux/slices/auth";
+import { useDispatch } from 'react-redux';
 
-// import { RegisterUser } from "../../redux/slices/auth";
 
 // ----------------------------------------------------------------------
 
 const RegisterForm = () => {
 
+    const dispatch = useDispatch();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -50,6 +52,8 @@ const RegisterForm = () => {
     const onSubmit = async (data) => {
         try {
             // submit data to backend
+            console.log(data)
+            dispatch(RegisterUser(data))
         } catch (error) {
             console.error(error);
             reset();

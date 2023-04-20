@@ -4,10 +4,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup'
 import FormProvider from '../../components/hook-form/FormProvider'
 import { Alert, Button, IconButton, InputAdornment, Link, Stack } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom'
 import { RHFTextField } from '../../components/hook-form';
 import { Eye, EyeSlash } from 'phosphor-react';
+import { useDispatch } from 'react-redux';
+import { LoginUser } from '../../redux/slices/auth';
 
 const LoginForm = () => {
+    const dispatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false)
     const LoginSchema = Yup.object().shape({
         email: Yup.string()
@@ -37,6 +41,7 @@ const LoginForm = () => {
     const onSubmit = async (data) => {
         try {
             // submit data to backend
+            dispatch(LoginUser(data))
 
         } catch (error) {
             console.error(error);
@@ -77,7 +82,7 @@ const LoginForm = () => {
             </Stack>
 
             <Stack alignItems="flex-end" sx={{ my: 2 }}>
-                <Link to="/auth/reset-password" variant="body2" color="inherit" underline="always">
+                <Link component={RouterLink} to="/auth/reset-password" variant="body2" color="inherit" underline="always">
                     Forgot password?
                 </Link>
             </Stack>
@@ -91,11 +96,12 @@ const LoginForm = () => {
                 // loading={isLoading}
                 sx={{
                     bgcolor: "text.primary",
+                    border: "2px solid black",
                     color: (theme) =>
                         theme.palette.mode === "light" ? "common.white" : "grey.800",
-                    "&:hover": {
-                        bgcolor: "text.primary",
-                        color: (theme) =>
+                    '&:hover': {
+                        color: "text.primary",
+                        bgcolor: (theme) =>
                             theme.palette.mode === "light" ? "common.white" : "grey.800",
                     },
                 }}
@@ -106,10 +112,9 @@ const LoginForm = () => {
             </Stack>
 
             
-
              */}
         </FormProvider>
     )
 }
 
-export default LoginForm
+export default LoginForm;

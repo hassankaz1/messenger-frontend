@@ -8,9 +8,29 @@ import useSettings from "../../hooks/useSettings";
 import Logo from "../../assets/Images/logo.ico"
 import AntSwitch from "../../components/AntSwitch";
 import { Profile_Menu } from "../../data";
+import { LogoutUser } from "../../redux/slices/auth";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+
+const getMenuPath = (index) => {
+    switch (index) {
+        case 0:
+            return "/profile";
+        case 1:
+            return "/settings";
+        default:
+            break;
+    }
+}
+
+
+
 
 const Sidebar = () => {
+    const dispatch = useDispatch();
     const theme = useTheme();
+    const navigate = useNavigate();
     const [selected, setSelected] = useState(0);
 
     const { onToggleMode } = useSettings();
@@ -102,9 +122,18 @@ const Sidebar = () => {
                         }}
                     >
                         <Stack spacing={1} px={1}>
-                            {Profile_Menu.map((e) => (
-                                <MenuItem onClick={handleClick}>
-                                    <Stack sx={{ width: 100 }} direction="row" alignItems={"center"} justifyContent="space-between">
+                            {Profile_Menu.map((e, idx) => (
+                                <MenuItem onClick={() => {
+                                    handleClick();
+                                }}>
+                                    <Stack onClick={() => {
+                                        if (idx === 2) {
+                                            dispatch(LogoutUser())
+                                        } else {
+                                            navigate(getMenuPath(idx))
+                                        }
+                                    }}
+                                        sx={{ width: 100 }} direction="row" alignItems={"center"} justifyContent="space-between">
                                         <span>
                                             {e.title}
                                         </span>
