@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import BackendApi from "../../backendApi";
 
 // import axios from "../../utils/axios";
 
@@ -12,7 +13,10 @@ const initialState = {
         open: null,
         severity: null,
         message: null,
-    }
+    },
+    users: [],
+    friends: [],
+    friendRequests: [],
 };
 
 const slice = createSlice({
@@ -36,6 +40,19 @@ const slice = createSlice({
             state.snackbar.open = false;
             state.snackbar.severity = null;
             state.snackbar.message = null;
+        },
+
+        updateUsers(state, action) {
+            state.users = action.payload.users;
+
+        },
+        updateFriends(state, action) {
+            state.friends = action.payload.friends;
+
+        },
+        updateFriendRequests(state, action) {
+            state.friendRequests = action.payload.requests;
+
         },
 
     },
@@ -74,4 +91,36 @@ export function showSnackbar({ severity, message }) {
 
 export const closeSnackBar = () => async (dispatch, getState) => {
     dispatch(slice.actions.closeSnackbar());
+}
+
+
+export const FetchUsers = () => {
+    return async (dispatch, getState) => {
+        const res = await BackendApi.getAllUsers()
+
+        dispatch(slice.actions.updateUsers({ users: res }));
+
+    }
+}
+
+
+export const FetchFriends = () => {
+    return async (dispatch, getState) => {
+        console.log("sending request to get friends")
+        const res = await BackendApi.getFriends()
+
+        console.log(res)
+        dispatch(slice.actions.updateFriends({ friends: res }));
+
+    }
+}
+
+export const FetchFriendRequests = () => {
+    return async (dispatch, getState) => {
+        const res = await BackendApi.getRequests()
+        console.log(res)
+
+        dispatch(slice.actions.updateFriendRequests({ requests: res }));
+
+    }
 }

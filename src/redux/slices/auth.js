@@ -60,12 +60,12 @@ export function RegisterUser(formValues) {
             const res = await BackendApi.register(formValues)
             console.log(res)
             window.localStorage.setItem("uid", res.newUser.id);
-            console.log(window.localStorage.getItem("uid"))
+            // console.log(window.localStorage.getItem("uid"))
 
-            // dispatch(slice.actions.logIn({
-            //     isLoggedIn: true,
-            //     token: res.token
-            // }))
+            dispatch(slice.actions.logIn({
+                isLoggedIn: true,
+                token: res.token
+            }))
 
             dispatch(showSnackbar({ severity: "success", message: "Registered Successful" }))
         } catch (err) {

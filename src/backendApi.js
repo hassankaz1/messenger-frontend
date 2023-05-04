@@ -47,6 +47,30 @@ class BackendApi {
         return res.data;
     }
 
+    static async getFriends() {
+        const uid = window.localStorage.getItem("uid")
+        console.log("sending request for friends info")
+        let res = await this.request(`user/friends/${uid}`, {}, "get");
+        console.log(res.data)
+        return res.data;
+    }
+
+    static async getAllUsers() {
+        const uid = window.localStorage.getItem("uid")
+        console.log("sending request for all users info")
+        let res = await this.request(`user/get-all-users/${uid}`, {}, "get");
+        console.log(res.data)
+        return res.data;
+    }
+
+    static async getRequests() {
+        const uid = window.localStorage.getItem("uid")
+        console.log("sending request for all friend requests info")
+        let res = await this.request(`friendrequest/requests/${uid}`, {}, "get");
+        console.log(res.data)
+        return res.data;
+    }
+
 }
 
 
