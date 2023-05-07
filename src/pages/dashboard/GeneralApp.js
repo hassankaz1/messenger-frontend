@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import Conversation from "../../components/Conversation";
 import Chats from "./Chats";
@@ -6,10 +6,14 @@ import { useTheme } from '@mui/system'
 import Contact from "../../components/Contact";
 import { useSelector } from "react-redux";
 import SharedMsg from "../../components/SharedMsg";
+import NoChat from "../../assets/Illustration/NoChat"
+import { Link } from "phosphor-react";
+
 
 const GeneralApp = () => {
   const theme = useTheme();
   const { sideBar } = useSelector((store) => store.app)
+  const { current_conversation } = useSelector((state) => state.conversation.one_to_one_chat);
 
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -22,7 +26,20 @@ const GeneralApp = () => {
         backgroundColor: theme.palette.mode === "light" ? "#F0F4FA" : theme.palette.background.paper
       }}>
         {/* Conversation */}
-        <Conversation />
+        {current_conversation ?
+          (<Conversation />) : (
+            <Stack
+              spacing={2}
+              sx={{ height: "100%", width: "100%" }}
+              alignItems="center"
+              justifyContent={"center"}
+            >
+              <NoChat />
+              <Typography variant="subtitle2">
+                Select a conversation or start a new one
+              </Typography>
+            </Stack>
+          )}
       </Box>
       {/* Contact */}
       {sideBar.open &&

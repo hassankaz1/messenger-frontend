@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Box, Stack, IconButton, InputAdornment, TextField, Fab, Tooltip } from '@mui/material'
 import { styled, useTheme } from '@mui/system'
 import { Camera, File, Image, LinkSimple, PaperPlaneTilt, Smiley, Sticker, User } from 'phosphor-react';
+import { useDispatch, useSelector } from 'react-redux';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import { socket } from '../../socket';
 
 
-const ChatInput = ({ openPicker, setOpenPicker }) => {
-    const [openActions, setOpenActions] = React.useState(false);
+
+const uid = window.localStorage.getItem("uid");
+
+const ChatInput = ({ openEmoji, setOpenEmoji, value, setValue }) => {
+    const [openActions, setOpenActions] = useState(false);
 
     return (
         <StyledInput
             fullWidth
             placeholder="Write a message..."
-            variant="filled"
+            variant="filled" value={value}
+            onChange={(event) => {
+                setValue(event.target.value);
+            }}
             InputProps={{
                 disableUnderline: true,
                 startAdornment: (
@@ -59,7 +67,7 @@ const ChatInput = ({ openPicker, setOpenPicker }) => {
                         <InputAdornment>
                             <IconButton
                                 onClick={() => {
-                                    setOpenPicker(!openPicker);
+                                    setOpenEmoji(!openEmoji);
                                 }}
                             >
                                 <Smiley />
@@ -118,6 +126,31 @@ const Actions = [
 const ChatFooter = () => {
     const theme = useTheme();
     const [openEmoji, setOpenEmoji] = useState(false);
+    const [value, setValue] = useState("");
+    const dispatch = useDispatch();
+    const { id, user_id } = useSelector((state) => state.conversation.one_to_one_chat.current_conversation);
+
+
+    function handleEmojiClick(emoji) {
+        setValue(value + emoji.native)
+    }
+
+    const handleSubmit = () => {
+        const data_to_send = {
+            recipient: user_id,
+            sender: uid,
+            cid: id,
+            message: value
+        }
+
+        console.log(data_to_send)
+
+        socket.emit("message", data_to_send)
+    }
+
+
+
+
     return (
         <Box p={2} sx={{
             width: "100%",
@@ -127,13 +160,13 @@ const ChatFooter = () => {
             <Stack direction={"row"} alignItems={"center"} spacing={3}>
                 <Stack sx={{ width: "100%" }}>
                     <Box sx={{ display: openEmoji ? "inline" : "none", zIndex: 10, position: "fixed", bottom: 81, right: 100 }}>
-                        <Picker theme={theme.palette.mode} data={data} onEmojiSelect={console.log} />
+                        <Picker theme={theme.palette.mode} data={data} onEmojiSelect={handleEmojiClick} />
                     </Box>
-                    <ChatInput setOpenEmoji={setOpenEmoji} />
+                    <ChatInput openEmoji={openEmoji} setOpenEmoji={setOpenEmoji} value={value} setValue={setValue} />
                 </Stack>
                 <Box sx={{ height: 48, width: 48, backgroundColor: theme.palette.primary.main, borderRadius: 1.5 }}>
                     <Stack sx={{ height: "100%", width: "100%" }} alignItems="center" justifyContent="center">
-                        <IconButton>
+                        <IconButton onClick={handleSubmit}>
                             <PaperPlaneTilt color="#fff" />
                         </IconButton>
                     </Stack>

@@ -1,4 +1,4 @@
-import { Badge, IconButton, Stack, Typography, InputBase, Button, Divider, Avatar } from '@mui/material'
+import { Badge, IconButton, Stack, Typography, InputBase, Button, Divider, Avatar, Link } from '@mui/material'
 import { Box } from '@mui/system'
 import { ArchiveBox, CircleDashed, MagnifyingGlass, Users } from 'phosphor-react'
 import React, { useEffect, useState } from 'react'
@@ -7,7 +7,8 @@ import { ChatList } from '../../data'
 import { SimpleBarStyle } from '../../components/Scrollbar'
 import Friends from '../../sections/main/Friends'
 import { socket } from '../../socket'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { FetchOneToOneConversations, SetCurrentConversation } from '../../redux/slices/conversation'
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -41,13 +42,23 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const ChatElement = ({ id, name, img, msg, time, unread, online }) => {
     const theme = useTheme();
+    const dispatch = useDispatch();
     return (
         <Box sx={{
             width: "100%",
             borderRadius: 1,
-            backgroundColor: theme.palette.mode === "light" ? "#fff" : theme.palette.background.paper
+            backgroundColor: theme.palette.mode === "light" ? "#fff" : theme.palette.background.paper,
+            cursor: 'pointer'
         }}
-            p={2}>
+            p={2}
+            onClick={
+                () => {
+                    dispatch(SetCurrentConversation(id))
+                }
+            }
+        >
+
+
             <Stack direction={"row"} alignItems={"center"} justifyContent="space-between">
                 <Stack direction={"row"} spacing={2}>
 
@@ -83,6 +94,7 @@ const ChatElement = ({ id, name, img, msg, time, unread, online }) => {
 
 
             </Stack>
+
 
         </Box>
     )
@@ -125,11 +137,17 @@ const Chats = () => {
     const [openDialog, setOpenDialog] = useState(false)
     const theme = useTheme();
 
+    const dispatch = useDispatch();
+
     const { conversations } = useSelector((state) => state.conversation.one_to_one_chat);
 
     useEffect(() => {
         socket.emit("get_existing_convos", { uid }, (data) => {
             // data => list of convos 
+            console.log("------finding conversations------")
+            console.log(data)
+            dispatch(FetchOneToOneConversations({ conversations: data }))
+
         })
 
     }, [])

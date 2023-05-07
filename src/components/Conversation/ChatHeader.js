@@ -5,12 +5,17 @@ import { faker } from '@faker-js/faker';
 import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from 'phosphor-react';
 import StyledBadge from '../StyledBadge';
 import { ToggleSidebar } from '../../redux/slices/app';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const ChatHeader = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const { img, name, online } = useSelector((state) => state.conversation.one_to_one_chat.current_conversation);
+
+
+
+
     return (
         <Box p={2} sx={{
             width: "100%",
@@ -32,7 +37,7 @@ const ChatHeader = () => {
                     </Box>
 
                     <Stack spacing={0.2}>
-                        <Typography variant='subtitle2'>{faker.name.fullName()}</Typography>
+                        <Typography variant='subtitle2'>{name}</Typography>
                         <Typography variant='caption'>Online</Typography>
                     </Stack>
                 </Stack>

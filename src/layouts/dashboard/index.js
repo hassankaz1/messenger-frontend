@@ -6,15 +6,15 @@ import Sidebar from "./Sidebar";
 import { connectSocket, socket } from "../../socket";
 import BackendApi from "../../backendApi";
 import { showSnackbar } from "../../redux/slices/app";
+import { AddOneToOneConversation, AddOneToOneMessage } from "../../redux/slices/conversation";
 
 
 const DashboardLayout = () => {
   const dispatch = useDispatch()
 
   const { isLoggedIn } = useSelector((state) => state.auth)
-  const { conversations } = useSelector((state) => state.conversation.one_to_one_chat);
+  const { conversations, current_conversation } = useSelector((state) => state.conversation.one_to_one_chat);
 
-  console.log("convo----\n", conversations)
   const uid = window.localStorage.getItem("uid")
 
   useEffect(() => {
@@ -67,14 +67,35 @@ const DashboardLayout = () => {
 
 
       socket.on("start_conversation", (data) => {
+        console.log("starting new convo")
+        dispatch(AddOneToOneConversation({ conversation: data }));
         console.log(data)
       });
 
 
+      socket.on("new_message", (data) => {
+
+        if (current_conversation.id == data.data.cid) {
+          dispatch(AddOneToOneMessage(data.data))
+
+        }
+      })
+
+
 
     }
+    // Remove event listener on component unmount
+    return () => {
+      socket?.off("friend_request_recieved");
+      socket?.off("friend_request_accepted");
+      socket?.off("request_sent");
+      socket?.off("start_conversation");
+      socket?.off("new_message");
+    };
 
   }, [isLoggedIn, socket])
+
+
 
   if (!isLoggedIn) {
     return <Navigate to="/auth/login" />;
