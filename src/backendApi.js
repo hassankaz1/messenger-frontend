@@ -70,6 +70,11 @@ class BackendApi {
         console.log(res.data)
         return res.data;
     }
+    static async getS3Url() {
+        console.log("sending request for S3 URL")
+        let res = await this.request(`auth/s3Url`, {}, "get");
+        return res.data;
+    }
 
 }
 

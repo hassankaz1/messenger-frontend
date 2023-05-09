@@ -14,9 +14,10 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
-import { faker } from "@faker-js/faker";
 import { useSearchParams } from "react-router-dom";
 import useResponsive from "../../hooks/useResponsive";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -64,6 +65,7 @@ const Conversation_Menu = [
 
 const ChatHeader = () => {
   const isMobile = useResponsive("between", "md", "xs", "sm");
+  const { img } = useSelector((state) => state.conversation.one_to_one_chat.current_conversation);
   const [searchParams, setSearchParams] = useSearchParams();
   const theme = useTheme();
 

@@ -8,6 +8,7 @@ import MainLayout from "../layouts/main";
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
+import Home from "../pages/home/Home";
 
 const Loadable = (Component) => (props) => {
   return (
@@ -19,6 +20,13 @@ const Loadable = (Component) => (props) => {
 
 export default function Router() {
   return useRoutes([
+    {
+      path: "/home",
+      element: <MainLayout />,
+      children: [
+        { element: <Home />, path: "" }
+      ]
+    },
     {
       path: "/auth",
       element: <MainLayout />,

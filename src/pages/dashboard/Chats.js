@@ -205,11 +205,11 @@ const Chats = () => {
                         <Divider />
                     </Stack>
                     <Stack
+                        className='scrollbar'
                         direction={"column"}
                         sx={{ flexGrow: 1, overflowY: "scroll", height: "100%" }}
                         spacing={2}>
-                        <SimpleBarStyle timeout={500} clickOnTrack={false}>
-                            {/* <Stack spacing={2.4}>
+                        {/* <Stack spacing={2.4}>
                                 <Typography variant='subtitle2' sx={{ color: "#676767" }}>
                                     Pinned
                                 </Typography>
@@ -218,15 +218,14 @@ const Chats = () => {
                                 })}
                             </Stack> */}
 
-                            <Stack spacing={2.4}>
-                                <Typography variant='subtitle2' sx={{ color: "#676767" }}>
-                                    All Chats
-                                </Typography>
-                                {conversations.filter((c) => !c.pinned).map((e) => {
-                                    return <ChatElement {...e} />
-                                })}
-                            </Stack>
-                        </SimpleBarStyle>
+                        <Stack spacing={2.4}>
+                            <Typography variant='subtitle2' sx={{ color: "#676767" }}>
+                                All Chats
+                            </Typography>
+                            {conversations.filter((c) => !c.pinned).map((e) => {
+                                return <ChatElement {...e} />
+                            })}
+                        </Stack>
                     </Stack>
 
                 </Stack>

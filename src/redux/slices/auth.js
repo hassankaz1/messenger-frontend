@@ -7,6 +7,7 @@ const initialState = {
     isLoggedIn: false,
     token: "",
     isLoading: false,
+    current_user: null,
 }
 
 
@@ -21,6 +22,10 @@ const slice = createSlice({
         signOut(state, action) {
             state.isLoggedIn = false;
             state.token = "";
+            state.current_user = null;
+        },
+        updateCurrentUser(state, action) {
+            state.current_user = action.payload.user;
         },
     },
 });
@@ -42,6 +47,8 @@ export function LoginUser(formValues) {
                 isLoggedIn: true,
                 token: res.token
             }))
+
+            dispatch(slice.actions.updateCurrentUser({ user: res.user }))
 
             dispatch(showSnackbar({ severity: "success", message: "Logged In Successful" }))
         } catch (err) {
@@ -67,6 +74,8 @@ export function RegisterUser(formValues) {
                 token: res.token
             }))
 
+            dispatch(slice.actions.updateCurrentUser({ user: res.newUser }))
+
             dispatch(showSnackbar({ severity: "success", message: "Registered Successful" }))
         } catch (err) {
             dispatch(showSnackbar({ severity: "error", message: err[0] }))
@@ -77,6 +86,7 @@ export function RegisterUser(formValues) {
 
 export function LogoutUser() {
     return async (dispatch, getState) => {
+        window.localStorage.removeItem("uid");
         dispatch(slice.actions.signOut());
     };
 }

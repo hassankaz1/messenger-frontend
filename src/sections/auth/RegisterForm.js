@@ -11,11 +11,12 @@ import FormProvider, { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
 import { RegisterUser } from "../../redux/slices/auth";
 import { useDispatch } from 'react-redux';
+import BackendApi from "../../backendApi";
 
 
 // ----------------------------------------------------------------------
 
-const RegisterForm = () => {
+const RegisterForm = ({ image }) => {
 
     const dispatch = useDispatch();
 
@@ -33,8 +34,8 @@ const RegisterForm = () => {
     const defaultValues = {
         firstName: "",
         lastName: "",
-        email: "demo@tawk.com",
-        password: "demo1234",
+        email: "your@email.com",
+        password: "hire me",
     };
 
     const methods = useForm({
@@ -52,8 +53,28 @@ const RegisterForm = () => {
     const onSubmit = async (data) => {
         try {
             // submit data to backend
-            console.log(data)
+            // data.image = image
+            // console.log(image)
+            const s3url = await BackendApi.getS3Url()
+            // console.log(res)
+
+            if (image) {
+                const uploading = await fetch(s3url.url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    },
+                    body: image
+                })
+                const avatarUrl = s3url.url.split('?')[0]
+                data.avatar = avatarUrl
+            } else {
+                data.avatar = "https://cdn.dribbble.com/users/6142/screenshots/5679189/media/1b96ad1f07feee81fa83c877a1e350ce.png?compress=1&resize=400x300&vertical=top"
+            }
+
             dispatch(RegisterUser(data))
+
+
         } catch (error) {
             console.error(error);
             reset();
@@ -95,6 +116,7 @@ const RegisterForm = () => {
                         ),
                     }}
                 />
+
             </Stack>
 
             <Button

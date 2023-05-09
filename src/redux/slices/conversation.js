@@ -43,10 +43,10 @@ const slice = createSlice({
                     user_id: user.id,
                     name: `${user.first_name} ${user.last_name}`,
                     online: user.on_line,
-                    img: `https://static.toiimg.com/thumb/msid-56833673,width-1280,resizemode-4/56833673.jpg`,
+                    img: user.avatar,
                     msg: messages.length > 0 ? messages.slice(-1)[0].message : "",
                     time: messages.length > 0 ? messages.slice(-1)[0].time : "",
-                    unread: 5,
+                    unread: 0,
                     pinned: false,
                     about: "need to fix about",
                     messages: messages
@@ -87,24 +87,29 @@ const slice = createSlice({
             const msg_date = new Date()
             const time_t = msg_date.toLocaleTimeString('en-US');
 
-            state.one_to_one_chat.conversations.push({
+            state.one_to_one_chat.conversations = [{
                 id: new_conversation.cid,
                 user_id: user.id,
                 name: `${user.first_name} ${user.last_name}`,
                 online: user.on_line,
-                img: `https://i.pinimg.com/736x/57/4e/4f/574e4f8a064686c3da38d3ca54e29ea4.jpg`,
+                img: user.avatar,
                 msg: new_conversation.messages.length > 0 ? new_conversation.messages.slice(-1)[0].message : "",
-                time: time_t,
+                time: time_t.slice(0, time_t.length - 6),
                 unread: 0,
                 pinned: false,
                 about: "need to fix about",
                 messages: new_conversation.messages
-            });
+            }, ...state.one_to_one_chat.conversations];
         },
         setCurrentConversation(state, action) {
             let current_id = action.payload
 
-            state.one_to_one_chat.current_conversation = state.one_to_one_chat.conversations.filter((conv) => conv.id == current_id)[0];
+            const convo_idx = state.one_to_one_chat.conversations.findIndex((conv) => conv.id == current_id)
+            const curr_convo = state.one_to_one_chat.conversations[convo_idx]
+            curr_convo.unread = 0
+
+            state.one_to_one_chat.current_conversation = curr_convo
+
         },
         fetchCurrentMessages(state, action) {
             const messages = action.payload.messages;
@@ -119,7 +124,48 @@ const slice = createSlice({
             state.one_to_one_chat.current_messages = formatted_messages;
         },
         addOneToOneMessage(state, action) {
+            console.log("atempting")
+            console.log(action.payload)
             state.one_to_one_chat.current_conversation.messages.push(action.payload.message);
+        },
+        updateOneToOneMessage(state, action) {
+            const new_message = action.payload.message
+            const convo_idx = state.one_to_one_chat.conversations.findIndex((conv) => conv.id == action.payload.cid)
+
+            if (convo_idx > -1) {
+                state.one_to_one_chat.conversations[convo_idx].msg = new_message.message
+                state.one_to_one_chat.conversations[convo_idx].time = new_message.time
+                state.one_to_one_chat.conversations[convo_idx].unread += 1
+                state.one_to_one_chat.conversations[convo_idx].messages.push(new_message)
+            }
+
+
+            // state.one_to_one_chat.current_conversation.messages.push(action.payload.message);
+        },
+        recieveNewMessage(state, action) {
+            const conv_id = action.payload.cid
+            const new_message = action.payload.message
+            const convo_idx = state.one_to_one_chat.conversations.findIndex((conv) => conv.id == action.payload.cid)
+
+            const curr_convo = state.one_to_one_chat.conversations[convo_idx]
+
+            if (conv_id == state.one_to_one_chat.current_conversation.id) {
+                state.one_to_one_chat.current_conversation.messages.push(action.payload.message);
+            } else {
+                slice.actions.updateOneToOneMessage(action.payload)
+                state.one_to_one_chat.conversations[convo_idx].unread += 1
+                state.one_to_one_chat.conversations[convo_idx].messages.push(new_message)
+            }
+            state.one_to_one_chat.conversations[convo_idx].msg = new_message.message
+            state.one_to_one_chat.conversations[convo_idx].time = new_message.time
+
+
+            state.one_to_one_chat.conversations.splice(convo_idx, 1);
+            state.one_to_one_chat.conversations = [curr_convo, ...state.one_to_one_chat.conversations]
+
+        },
+        resetCurrentConversation(state, action) {
+            state.one_to_one_chat.current_conversation = null
         }
     },
 });
@@ -134,6 +180,11 @@ export const FetchOneToOneConversations = ({ conversations }) => {
         dispatch(slice.actions.fetchOneToOneConversations({ conversations }));
     };
 };
+export const ResetCurrentConversation = () => {
+    return async (dispatch, getState) => {
+        dispatch(slice.actions.resetCurrentConversation());
+    }
+}
 export const AddOneToOneConversation = ({ conversation }) => {
     return async (dispatch, getState) => {
         dispatch(slice.actions.addOneToOneConversation({ conversation }));
@@ -179,5 +230,28 @@ export const AddOneToOneMessage = (m) => {
 
     return async (dispatch, getState) => {
         dispatch(slice.actions.addOneToOneMessage({ message }));
+    }
+}
+
+export const UpdateOneToOneMessage = (m) => {
+
+    const msg_date = new Date(m.created_at)
+    const time_t = msg_date.toLocaleTimeString('en-US');
+    const cid = m.cid
+
+    const message = {
+        type: m.msgtype,
+        message: m.msg,
+        datetime: msg_date,
+        time: time_t.slice(0, time_t.length - 6),
+        incoming: m.recipient == uid ? true : false,
+        outgoing: m.sender == uid ? true : false,
+        img: m.img,
+        link: m.filelink
+    }
+
+
+    return async (dispatch, getState) => {
+        dispatch(slice.actions.recieveNewMessage({ message, cid }));
     }
 }

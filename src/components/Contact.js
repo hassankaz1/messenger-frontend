@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogConten
 import { useTheme } from '@mui/system'
 import { Bell, CaretRight, Phone, Prohibit, Star, Trash, VideoCamera, X } from 'phosphor-react';
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ToggleSidebar, UpdateSidebarType } from '../redux/slices/app';
 import AntSwitch from './AntSwitch';
 
@@ -63,6 +63,7 @@ const DeleteDialog = ({ open, handleClose }) => {
 const Contact = () => {
     const theme = useTheme();
     const dispath = useDispatch();
+    const { img, name, online } = useSelector((state) => state.conversation.one_to_one_chat.current_conversation);
     const [openBlock, setOpenBlock] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -94,13 +95,13 @@ const Contact = () => {
                 {/* Body */}
                 <Stack sx={{ height: "100%", position: "relative", flexGrow: 1, overflowY: "scroll" }} p={3} spacing={3}>
                     <Stack alignItems={"center"} direction="row" spacing={2}>
-                        <Avatar src={faker.image.avatar()} alt={faker.name.firstName()} sx={{ height: 64, width: 64 }} />
+                        <Avatar src={img} alt={faker.name.firstName()} sx={{ height: 64, width: 64 }} />
                         <Stack spacing={0.5}>
                             <Typography variant='article' fontWeight={600}>
-                                Hassan Kazi
+                                {name}
                             </Typography>
                             <Typography variant='body2' fontWeight={500}>
-                                +1 (917) 960 8754
+                                n/a
                             </Typography>
                         </Stack>
                     </Stack>
@@ -122,7 +123,8 @@ const Contact = () => {
                     <Divider />
                     <Stack spacing={0.5}>
                         <Typography variant="article">About</Typography>
-                        <Typography variant="body2">Imagination is the only limit</Typography>
+                        <Typography variant="body2">Work in Progres - This section is still being built</Typography>
+                        <Typography variant="body2">The media shown below is just demo</Typography>
                     </Stack>
                     <Divider />
                     <Stack direction="row" alignItems={"center"} justifyContent="space-between">

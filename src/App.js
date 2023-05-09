@@ -23,7 +23,7 @@ const Alert = React.forwardRef(function Alert(
 function App() {
   const dispatch = useDispatch();
   const { open, message, severity } = useSelector((state) => state.app.snackbar);
-  console.log(window.localStorage.getItem("user_id"))
+  console.log(window.localStorage.getItem("uid"))
 
   return (
 
@@ -44,13 +44,11 @@ function App() {
           autoHideDuration={4000}
           key={vertical + horizontal}
           onClose={() => {
-            console.log("This is clicked");
             dispatch(closeSnackBar());
           }}
         >
           <Alert
             onClose={() => {
-              console.log("This is clicked");
               dispatch(closeSnackBar());
             }}
             severity={severity}

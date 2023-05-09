@@ -3,9 +3,16 @@ import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import AuthSocial from '../../sections/auth/AuthSocial'
 import LoginForm from '../../sections/auth/LoginForm'
+
+import Logo from "../../assets/Images/logo.ico"
+
+
 const Login = () => {
     return (
         <>
+            <Stack sx={{ width: "100%" }} direction="column" alignItems={"center"}>
+                <img style={{ height: "90px", width: "90px" }} src={Logo} alt="none" />
+            </Stack>
             <Stack spacing={2} sx={{ mt: 5, position: "relative" }}>
                 <Typography variant="h4">Login to Messenger</Typography>
                 <Stack direction="row" spacing={0.5}>

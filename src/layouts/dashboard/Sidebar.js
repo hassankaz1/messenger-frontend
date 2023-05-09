@@ -1,16 +1,25 @@
 import { useTheme } from "@mui/system";
-import { Avatar, Box, Divider, IconButton, Stack, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, Stack, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide, Button } from "@mui/material";
 import { Gear } from "phosphor-react";
 import React, { useState } from "react";
 import { Nav_Buttons } from "../../data";
-import { faker } from "@faker-js/faker";
 import useSettings from "../../hooks/useSettings";
 import Logo from "../../assets/Images/logo.ico"
 import AntSwitch from "../../components/AntSwitch";
 import { Profile_Menu } from "../../data";
 import { LogoutUser } from "../../redux/slices/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../../socket";
+
+
+const uid = window.localStorage.getItem("uid");
+
+const Transition = React.forwardRef(function Transition(props: TransitionProps & { children: React.ReactElement<any, any>; },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 const getMenuPath = (index) => {
@@ -24,6 +33,35 @@ const getMenuPath = (index) => {
     }
 }
 
+const InfoDialog = ({ open, handleClose }) => {
+    return <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+    >
+        <DialogTitle>{"SORRY COMING SOON"}</DialogTitle>
+        <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+                This project is still work in progress. Functionality still not available:
+                <br />
+                <ul style={{ textAlign: "center", listStyleType: "none" }}>
+                    <li> - Settings</li>
+                    <li> - Group Chat</li>
+                    <li> - Media Share</li>
+                    <li> - Edit Profile</li>
+                    <li> - Audio/Video Call</li>
+                </ul>
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleClose}>Come Back Soon</Button>
+        </DialogActions>
+    </Dialog>
+
+}
+
 
 
 
@@ -32,7 +70,10 @@ const Sidebar = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const [selected, setSelected] = useState(0);
+    const [openInfo, setOpenInfo] = useState(false);
 
+
+    const { current_user } = useSelector((state) => state.auth);
     const { onToggleMode } = useSettings();
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -43,6 +84,10 @@ const Sidebar = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleCloseInfo = () => {
+        setOpenInfo(false);
+    }
 
 
 
@@ -73,6 +118,9 @@ const Sidebar = () => {
                                 <IconButton
                                     onClick={() => {
                                         setSelected(e.index)
+                                        if (e.index !== 0) {
+                                            setOpenInfo(true)
+                                        }
                                     }}
                                     sx={{ width: "max-content", color: theme.palette.mode === "light" ? "#000" : theme.palette.primary }} key={e.index}>
                                     {e.icon}
@@ -92,6 +140,7 @@ const Sidebar = () => {
                             <IconButton
                                 onClick={() => {
                                     setSelected(3)
+                                    setOpenInfo(true)
                                 }} sx={{ width: "max-content", color: theme.palette.mode === "light" ? "#000" : theme.palette.primary }}>
                                 <Gear />
                             </IconButton>
@@ -103,7 +152,7 @@ const Sidebar = () => {
                     <Avatar id="basic-button" aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
-                        onClick={handleClick} src={faker.image.avatar()} />
+                        onClick={handleClick} src={current_user.avatar} />
                     <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -128,9 +177,11 @@ const Sidebar = () => {
                                 }}>
                                     <Stack onClick={() => {
                                         if (idx === 2) {
+                                            socket.emit("end", { uid })
                                             dispatch(LogoutUser())
                                         } else {
-                                            navigate(getMenuPath(idx))
+                                            setOpenInfo(true)
+                                            // navigate(getMenuPath(idx))
                                         }
                                     }}
                                         sx={{ width: 100 }} direction="row" alignItems={"center"} justifyContent="space-between">
@@ -146,6 +197,8 @@ const Sidebar = () => {
                     </Menu>
                 </Stack>
             </Stack>
+            {openInfo && <InfoDialog open={openInfo} handleClose={handleCloseInfo} />}
+
         </Box>
     )
 }

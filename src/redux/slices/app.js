@@ -54,7 +54,6 @@ const slice = createSlice({
             state.friendRequests = action.payload.requests;
 
         },
-
     },
 });
 
@@ -97,6 +96,8 @@ export const closeSnackBar = () => async (dispatch, getState) => {
 export const FetchUsers = () => {
     return async (dispatch, getState) => {
         const res = await BackendApi.getAllUsers()
+        console.log("fetching users")
+        console.log(res)
 
         dispatch(slice.actions.updateUsers({ users: res }));
 

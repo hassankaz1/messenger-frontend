@@ -19,6 +19,8 @@ const UsersList = () => {
 
     const { users } = useSelector((state) => state.app);
 
+    console.log("all users")
+
     console.log(users)
 
 
@@ -29,9 +31,9 @@ const UsersList = () => {
 
     return (
         <>
-            {users.users.map((el, idx) => {
+            {users.users ? (users.users.map((el, idx) => {
                 return <UserElement key={idx} {...el} />;
-            })}
+            })) : (<></>)}
         </>
     );
 };
@@ -48,9 +50,9 @@ const FriendsList = () => {
 
     return (
         <>
-            {friends.friends.map((el, idx) => {
+            {friends.friends ? (friends.friends.map((el, idx) => {
                 return <FriendElement key={idx} {...el} />;
-            })}
+            })) : (<></>)}
         </>
     );
 };
@@ -67,9 +69,9 @@ const RequestsList = () => {
 
     return (
         <>
-            {friendRequests.requests.map((el, idx) => {
+            {friendRequests.requests ? (friendRequests.requests.map((el, idx) => {
                 return <FriendRequestElement key={idx} {...el} />;
-            })}
+            })) : (<></>)}
         </>
     );
 };

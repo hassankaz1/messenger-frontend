@@ -11,12 +11,19 @@ import { socket } from '../../socket';
 
 const uid = window.localStorage.getItem("uid");
 
-const ChatInput = ({ openEmoji, setOpenEmoji, value, setValue }) => {
+const ChatInput = ({ openEmoji, setOpenEmoji, value, setValue, handleSubmit }) => {
     const [openActions, setOpenActions] = useState(false);
+
+    const enter = (e) => {
+        if (e.key == "Enter") {
+            handleSubmit()
+        }
+    }
 
     return (
         <StyledInput
             fullWidth
+            onKeyDown={enter}
             placeholder="Write a message..."
             variant="filled" value={value}
             onChange={(event) => {
@@ -146,6 +153,14 @@ const ChatFooter = () => {
         console.log(data_to_send)
 
         socket.emit("message", data_to_send)
+
+        setValue("")
+    }
+
+    const something = (event) => {
+        if (event.key === 'Enter') {
+            console.log('enter')
+        }
     }
 
 
@@ -162,7 +177,7 @@ const ChatFooter = () => {
                     <Box sx={{ display: openEmoji ? "inline" : "none", zIndex: 10, position: "fixed", bottom: 81, right: 100 }}>
                         <Picker theme={theme.palette.mode} data={data} onEmojiSelect={handleEmojiClick} />
                     </Box>
-                    <ChatInput openEmoji={openEmoji} setOpenEmoji={setOpenEmoji} value={value} setValue={setValue} />
+                    <ChatInput handleSubmit={handleSubmit} openEmoji={openEmoji} setOpenEmoji={setOpenEmoji} value={value} setValue={setValue} />
                 </Stack>
                 <Box sx={{ height: 48, width: 48, backgroundColor: theme.palette.primary.main, borderRadius: 1.5 }}>
                     <Stack sx={{ height: "100%", width: "100%" }} alignItems="center" justifyContent="center">

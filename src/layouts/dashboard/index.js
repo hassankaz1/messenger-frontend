@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar";
 import { connectSocket, socket } from "../../socket";
 import BackendApi from "../../backendApi";
 import { showSnackbar } from "../../redux/slices/app";
-import { AddOneToOneConversation, AddOneToOneMessage } from "../../redux/slices/conversation";
+import { AddOneToOneConversation, AddOneToOneMessage, UpdateOneToOneMessage } from "../../redux/slices/conversation";
 
 
 const DashboardLayout = () => {
@@ -75,10 +75,16 @@ const DashboardLayout = () => {
 
       socket.on("new_message", (data) => {
 
-        if (current_conversation.id == data.data.cid) {
-          dispatch(AddOneToOneMessage(data.data))
+        console.log(data.data.cid, current_conversation.id)
 
-        }
+        dispatch(UpdateOneToOneMessage(data.data))
+
+        // if (current_conversation.id == data.data.cid) {
+        //   dispatch(AddOneToOneMessage(data.data))
+        // } else {
+        //   console.log("not current convo")
+        //   dispatch(UpdateOneToOneMessage(data.data))
+        // }
       })
 
 
@@ -98,7 +104,7 @@ const DashboardLayout = () => {
 
 
   if (!isLoggedIn) {
-    return <Navigate to="/auth/login" />;
+    return <Navigate to="/home" />;
   }
 
   return (

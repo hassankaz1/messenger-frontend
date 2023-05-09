@@ -9,6 +9,10 @@ import { RHFTextField } from '../../components/hook-form';
 import { Eye, EyeSlash } from 'phosphor-react';
 import { useDispatch } from 'react-redux';
 import { LoginUser } from '../../redux/slices/auth';
+import { ResetCurrentConversation } from '../../redux/slices/conversation';
+
+
+
 
 const LoginForm = () => {
     const dispatch = useDispatch();
@@ -21,8 +25,8 @@ const LoginForm = () => {
     });
 
     const defaultValues = {
-        email: "demo@tawk.com",
-        password: "demo1234",
+        email: "your@email.com",
+        password: "hire me",
     };
 
 
@@ -42,6 +46,7 @@ const LoginForm = () => {
         try {
             // submit data to backend
             dispatch(LoginUser(data))
+            dispatch(ResetCurrentConversation())
 
         } catch (error) {
             console.error(error);
@@ -54,6 +59,8 @@ const LoginForm = () => {
     };
 
     return (
+
+
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
                 {!!errors.afterSubmit && (
@@ -114,6 +121,7 @@ const LoginForm = () => {
             
              */}
         </FormProvider>
+
     )
 }
 
