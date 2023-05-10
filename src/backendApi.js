@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8000";
+
+
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
 class BackendApi {
 
@@ -8,6 +10,7 @@ class BackendApi {
 
     static async request(endpoint, data = {}, method = "get") {
         console.debug("API Call:", endpoint, data, method);
+        console.log(BASE_URL)
 
         const url = `${BASE_URL}/${endpoint}`;
 
@@ -72,6 +75,7 @@ class BackendApi {
     }
     static async getS3Url() {
         console.log("sending request for S3 URL")
+        console.log(BASE_URL)
         let res = await this.request(`auth/s3Url`, {}, "get");
         return res.data;
     }
