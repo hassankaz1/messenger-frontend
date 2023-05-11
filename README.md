@@ -7,6 +7,10 @@ A Chat Application so friends can connect from anywhere in the world at any time
 [Live Link](https://www.linkedin.com/in/garv-s-64b238241/)
 [Link to Backend](https://github.com/hassankaz1/messenger-backend)
 
+<p align="center">
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/main.gif" alt="animated" />
+</p>
+
 
 
 ## What it does
@@ -38,11 +42,15 @@ In Messenger-Like users can create account where they may explore and find new f
 ## Login/Signup
 Users are greeted with a login/signup page. If account exists, they may log in normally. If they are new to the application, the user has the option to sign up. They can choose to add a custom avatar or will be assigned a space man/woman as default.
 
+#### Login 
 <p align="center">
-  <img src="https://github.com/hassankaz1/messenger-frontend/tree/login.gif" alt="animated" />
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/login.gif" alt="animated" />
 </p>
 
-signup
+#### Signup
+<p align="center">
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/signup.gif" alt="animated" />
+</p>
 
 ## Find or View Friends
 Within the dashboard for the user. Users may press the friends icon to do 3 things:
@@ -51,11 +59,22 @@ Within the dashboard for the user. Users may press the friends icon to do 3 thin
 2. View current friends: there is a chat icon when clicked will start a new or open conversation with the friend
 3. Accept requests made by other users that want to be your friend
 
-dashboard
+<p align="center">
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/modal.gif" alt="animated" />
+</p>
+
+#### Adding Friend
+<p align="center">
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/addfriend.gif" alt="animated" />
+</p>
 
 
 ## Chat
 In the dashboard, all active chats are displayed on the left side of the screen. Within this we will see notification of unseen messages that are updated live through sockets. Within the conversation, the user can add emoji's and enjoy a fun conversation. 
+
+<p align="center">
+  <img src="https://github.com/hassankaz1/messenger-frontend/blob/master/demo-gifs/chatting.gif" alt="animated" />
+</p>
 
 ### Future Plans
 
