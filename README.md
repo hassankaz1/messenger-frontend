@@ -4,7 +4,8 @@ A Chat Application so friends can connect from anywhere in the world at any time
 
 (**work in progress-** last section goes over functionality still being created )
 
-[Live Link](https://www.linkedin.com/in/garv-s-64b238241/)
+[Live Link](https://master--jovial-platypus-473ca4.netlify.app/)
+
 [Link to Backend](https://github.com/hassankaz1/messenger-backend)
 
 <p align="center">
