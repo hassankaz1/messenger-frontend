@@ -78,7 +78,7 @@ export default function Home() {
 
             </Stack>
             <Stack direction="row" alignContent="center" justifyContent="space-evenly" spacing={0}>
-                <IconButton>
+                <IconButton target="_blank" href='https://github.com/hassankaz1/messenger-frontend'>
                     <img style={{ width: 30, height: 30 }} src={githubLogo} />
                 </IconButton>
 
